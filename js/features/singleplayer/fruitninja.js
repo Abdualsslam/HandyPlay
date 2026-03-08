@@ -4,6 +4,7 @@
 function fnReset() {
     fnFruits = []; fnParticles = []; fnSlashTrail = [];
     fnScore = 0; fnLives = 3; fnMissCount = 0;
+    fnLevel = 1; fnScoreToNext = 10;
     fnGameOver = false; fnLastSpawn = 0;
     fnSpawnInterval = FN_INITIAL_SPAWN_INTERVAL;
     fnStarted = false;
@@ -20,7 +21,7 @@ function fnSpawnFruit() {
         x: c.width * 0.15 + Math.random() * c.width * 0.7,
         y: c.height + radius + 10,
         vx: (Math.random() - 0.5) * 3,
-        vy: -(c.height * 0.018 + Math.random() * c.height * 0.008),
+        vy: -(c.height * 0.018 + Math.random() * c.height * 0.008) * (1 + (fnLevel - 1) * 0.05),
         radius: radius,
         color: ft.color, light: ft.light,
         rotation: 0,
@@ -48,7 +49,15 @@ function fnUpdate() {
     var elapsed = (now - fnStartTime) / 1000;
 
     // Increase difficulty
-    fnSpawnInterval = Math.max(FN_MIN_SPAWN_INTERVAL, FN_INITIAL_SPAWN_INTERVAL - elapsed * 8);
+    fnSpawnInterval = Math.max(FN_MIN_SPAWN_INTERVAL, FN_INITIAL_SPAWN_INTERVAL - (fnLevel - 1) * 200 - elapsed * 8);
+
+    // Update level
+    if (fnScore >= fnScoreToNext) {
+        fnLevel++;
+        fnScoreToNext += 10 + fnLevel * 5;
+        sndWin(); // Level up sound
+        fnAddParticles(c.width / 2, c.height / 2, GOLD, 50); // Celebration particles
+    }
 
     // Spawn
     if (now - fnLastSpawn > fnSpawnInterval) {
@@ -63,7 +72,7 @@ function fnUpdate() {
     for (var i = fnFruits.length - 1; i >= 0; i--) {
         var f = fnFruits[i];
         if (f.sliced) { fnFruits.splice(i, 1); continue; }
-        f.vy += 0.35; // gravity
+        f.vy += 0.35 + (fnLevel - 1) * 0.02; // gravity
         f.x += f.vx;
         f.y += f.vy;
         f.rotation += f.rotSpeed;
@@ -272,6 +281,21 @@ function renderFruitNinja(lm) {
     ctx.shadowBlur = 10;
     ctx.fillText('🍎 ' + fnScore, 25, 100);
 
+    // Level & Progress
+    ctx.font = '600 24px Outfit';
+    ctx.fillStyle = '#FFFFFF';
+    ctx.shadowBlur = 0;
+    ctx.fillText('Level ' + fnLevel, 25, 140);
+
+    var progress = fnScore / fnScoreToNext;
+    ctx.fillStyle = 'rgba(255,255,255,0.2)';
+    ctx.fillRect(25, 155, 150, 10);
+    ctx.fillStyle = GREEN_ACCENT;
+    ctx.shadowColor = GREEN_ACCENT;
+    ctx.shadowBlur = 8;
+    ctx.fillRect(25, 155, 150 * progress, 10);
+    ctx.shadowBlur = 0;
+
     // HUD - Lives
     ctx.textAlign = 'right';
     var hearts = '';
@@ -281,14 +305,12 @@ function renderFruitNinja(lm) {
     ctx.restore();
 
     // Hand cursor in game
-    if (lm) {
-        for (var h = 0; h < numHands; h++) {
-            if (isPointing(lm[h])) {
-                ctx.beginPath();
-                ctx.arc(P[h].sx, P[h].sy, 5, 0, 2 * Math.PI);
-                ctx.fillStyle = '#FFFFFF';
-                ctx.fill();
-            }
+    if (lm && numHands > 0) {
+        if (isPointing(lm[0])) {
+            ctx.beginPath();
+            ctx.arc(P[0].sx, P[0].sy, 5, 0, 2 * Math.PI);
+            ctx.fillStyle = '#FFFFFF';
+            ctx.fill();
         }
     }
 

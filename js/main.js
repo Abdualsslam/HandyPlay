@@ -90,7 +90,7 @@ function run(res) {
         }
 
         // Fruit Ninja slash trail
-        if (MODE === 'FRUIT_NINJA' && !fnGameOver && isPointing(lm)) {
+        if (MODE === 'FRUIT_NINJA' && !fnGameOver && h === 0 && isPointing(lm)) {
             fnSlashTrail.push({ x: cur.sx, y: cur.sy, t: Date.now() });
         }
     }
@@ -111,10 +111,12 @@ function run(res) {
             ctx.lineJoin = 'round';
             ctx.globalAlpha = 0.3;
             for (var i = 0; i < drawStrokes.length; i++) {
-                if (drawStrokes[i].length < 2) continue;
+                if (drawStrokes[i].isEraser) continue;
+                var pts = drawStrokes[i].points || drawStrokes[i];
+                if (!pts || pts.length < 2) continue;
                 ctx.beginPath();
-                ctx.moveTo(drawStrokes[i][0].x, drawStrokes[i][0].y);
-                for (var j = 1; j < drawStrokes[i].length; j++) ctx.lineTo(drawStrokes[i][j].x, drawStrokes[i][j].y);
+                ctx.moveTo(pts[0].x, pts[0].y);
+                for (var j = 1; j < pts.length; j++) ctx.lineTo(pts[j].x, pts[j].y);
                 ctx.stroke();
             }
             ctx.globalAlpha = 1;
@@ -122,7 +124,7 @@ function run(res) {
             renderMenu();
             break;
         case 'FRUIT_NINJA':
-            renderFruitNinja(lmArr.length > 0);
+            renderFruitNinja(lmArr);
             break;
         case 'TIC_TAC_TOE':
             renderTicTacToe();
