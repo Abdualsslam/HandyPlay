@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+
+<head>
+  <meta charset="UTF-8">
+  <title>ألعاب الإيماءات اليدوية</title>
+  <link
+    href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;600;700&family=Noto+Kufi+Arabic:wght@400;600;700&display=swap"
+    rel="stylesheet">
+  <link rel="stylesheet" href="css/style.css">
+  <script src="https://cdn.jsdelivr.net/npm/@mediapipe/camera_utils/camera_utils.js" crossorigin="anonymous"></script>
+  <script src="https://cdn.jsdelivr.net/npm/@mediapipe/drawing_utils/drawing_utils.js" crossorigin="anonymous"></script>
+  <script src="https://cdn.jsdelivr.net/npm/@mediapipe/hands/hands.js" crossorigin="anonymous"></script>
+</head>
+
+<body>
+  <video id="vid"></video>
+  <canvas id="c"></canvas>
+
+  <!-- Core Scripts -->
+  <script src="js/core/config.js"></script>
+  <script src="js/core/i18n.js"></script>
+  <script src="js/core/state.js"></script>
+  <script src="js/core/utils.js"></script>
+  <script src="js/core/gesture.js"></script>
+
+  <!-- UI Scripts -->
+  <script src="js/ui/buttons.js"></script>
+  <script src="js/ui/menu.js"></script>
+
+  <!-- Feature Modules -->
+  <script src="js/features/singleplayer/drawing.js"></script>
+  <script src="js/features/singleplayer/fruitninja.js"></script>
+  <script src="js/features/singleplayer/targetshooter.js"></script>
+  <script src="js/features/singleplayer/aidraw.js"></script>
+  <script src="js/features/multiplayer/tictactoe.js"></script>
+  <script src="js/features/multiplayer/pictionary.js"></script>
+  <script src="js/features/multiplayer/airband.js"></script>
+
+  <!-- Main Application -->
+  <script src="js/main.js"></script>
+</body>
+
+</html>
