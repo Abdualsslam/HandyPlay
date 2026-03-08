@@ -12,51 +12,29 @@ var DRAW_COLORS = [
 ];
 
 function eraseNearby(x, y) {
-    var newArr = [];
-    for (var i = 0; i < drawStrokes.length; i++) {
-        var strokeObj = drawStrokes[i];
-        var segment = [];
-        for (var j = 0; j < strokeObj.points.length; j++) {
-            if (dist(strokeObj.points[j].x, strokeObj.points[j].y, x, y) <= ERASER_RADIUS) {
-                if (segment.length >= 2) newArr.push({ color: strokeObj.color, points: segment });
-                segment = [];
-            } else {
-                segment.push(strokeObj.points[j]);
-            }
-        }
-        if (segment.length >= 2) newArr.push({ color: strokeObj.color, points: segment });
-    }
-    drawStrokes = newArr;
-    for (var h = 0; h < numHands; h++) {
-        if (P[h] && P[h].isDraw) {
-            var found = false;
-            for (var k = 0; k < drawStrokes.length; k++) {
-                if (drawStrokes[k] === P[h].drawCur) found = true;
-            }
-            if (!found) P[h].isDraw = false;
-        }
-    }
+    // eraseNearby has been removed. Eraser logic is handled via destination-out in renderDrawing.
 }
 
-function drawSmoothStroke(strokeObj) {
+function drawSmoothStroke(strokeObj, targetCtx) {
     var pts = strokeObj.points;
     if (!pts || pts.length < 2) return;
-    ctx.strokeStyle = strokeObj.color;
-    ctx.shadowColor = strokeObj.color;
-    ctx.beginPath();
-    ctx.moveTo(pts[0].x, pts[0].y);
+    targetCtx = targetCtx || ctx;
+    targetCtx.strokeStyle = strokeObj.color;
+    targetCtx.shadowColor = strokeObj.color;
+    targetCtx.beginPath();
+    targetCtx.moveTo(pts[0].x, pts[0].y);
     if (pts.length === 2) {
-        ctx.lineTo(pts[1].x, pts[1].y);
+        targetCtx.lineTo(pts[1].x, pts[1].y);
     } else {
         for (var i = 1; i < pts.length - 1; i++) {
             var mx = (pts[i].x + pts[i + 1].x) / 2;
             var my = (pts[i].y + pts[i + 1].y) / 2;
-            ctx.quadraticCurveTo(pts[i].x, pts[i].y, mx, my);
+            targetCtx.quadraticCurveTo(pts[i].x, pts[i].y, mx, my);
         }
         var last = pts[pts.length - 1];
-        ctx.lineTo(last.x, last.y);
+        targetCtx.lineTo(last.x, last.y);
     }
-    ctx.stroke();
+    targetCtx.stroke();
 }
 
 function renderDrawing(lmArr) {
@@ -65,15 +43,40 @@ function renderDrawing(lmArr) {
         drawStrokes = [];
     }
 
-    // 1. Draw existing strokes
-    ctx.save();
-    ctx.shadowBlur = 15;
-    ctx.lineWidth = 6;
-    ctx.lineCap = 'round';
-    ctx.lineJoin = 'round';
-    for (var i = 0; i < drawStrokes.length; i++) {
-        drawSmoothStroke(drawStrokes[i]);
+    // Initialize offscreen canvas if needed
+    if (!window.offscreenCanvas || window.offscreenCanvas.width !== c.width || window.offscreenCanvas.height !== c.height) {
+        window.offscreenCanvas = document.createElement('canvas');
+        window.offscreenCanvas.width = c.width;
+        window.offscreenCanvas.height = c.height;
+        window.offscreenCtx = window.offscreenCanvas.getContext('2d');
     }
+
+    // Clear offscreen canvas
+    window.offscreenCtx.clearRect(0, 0, window.offscreenCanvas.width, window.offscreenCanvas.height);
+
+    // 1. Draw existing strokes to offscreen canvas
+    window.offscreenCtx.save();
+    window.offscreenCtx.lineCap = 'round';
+    window.offscreenCtx.lineJoin = 'round';
+    for (var i = 0; i < drawStrokes.length; i++) {
+        var stroke = drawStrokes[i];
+        if (stroke.isEraser) {
+            window.offscreenCtx.globalCompositeOperation = 'destination-out';
+            window.offscreenCtx.lineWidth = stroke.eraserRadius * 2;
+            window.offscreenCtx.shadowBlur = 0;
+            drawSmoothStroke(stroke, window.offscreenCtx);
+        } else {
+            window.offscreenCtx.globalCompositeOperation = 'source-over';
+            window.offscreenCtx.lineWidth = 6;
+            window.offscreenCtx.shadowBlur = 15;
+            drawSmoothStroke(stroke, window.offscreenCtx);
+        }
+    }
+    window.offscreenCtx.restore();
+
+    // Draw offscreen canvas to main canvas
+    ctx.save();
+    ctx.drawImage(window.offscreenCanvas, 0, 0);
     ctx.restore();
 
     // 2. Draw Top UI (Tools)
@@ -143,6 +146,60 @@ function renderDrawing(lmArr) {
 
     ctx.restore();
 
+    // 2.5 Draw Eraser Controls UI
+    ctx.save();
+    var eraserUiY = 140; // below top tools
+    var ctrlW = 40;
+    var ctrlH = 40;
+
+    // Align with Clear button ('draw_clear' is at startX - btnW - 35)
+    var erasStartX = startX - btnW - 35;
+
+    // Eraser Label
+    ctx.fillStyle = '#FFFFFF';
+    ctx.font = 'bold 16px Cairo';
+    ctx.textAlign = 'left';
+    ctx.textBaseline = 'middle';
+    var textEraserSize = typeof t === 'function' ? t('eraser_size') : 'Eraser Size';
+    if (textEraserSize === 'eraser_size') textEraserSize = 'حجم الممحاة';
+
+    // Draw Label text
+    ctx.fillText(textEraserSize + ':', erasStartX, eraserUiY + ctrlH / 2);
+    var labelWidth = ctx.measureText(textEraserSize + ':').width;
+
+    // (-) Decrease Button
+    var decX = erasStartX + labelWidth + 15;
+    createBtn('eras_minus', decX, eraserUiY, ctrlW, ctrlH, '', '➖');
+    if (updateBtn('eras_minus')) {
+        sndSelect();
+        if (typeof ERASER_RADIUS === 'undefined') window.ERASER_RADIUS = 30; // safety fallback
+        window.ERASER_RADIUS = Math.max(10, window.ERASER_RADIUS - 5);
+    }
+    drawBtn('eras_minus', { fontSize: 20 });
+
+    // Show current size visually
+    var previewX = decX + ctrlW + 15;
+    var currentRad = typeof ERASER_RADIUS !== 'undefined' ? ERASER_RADIUS : 30;
+    ctx.beginPath();
+    ctx.arc(previewX + 25, eraserUiY + ctrlH / 2, currentRad * 0.4, 0, Math.PI * 2); // scale down preview
+    ctx.fillStyle = 'rgba(255,100,100,0.8)';
+    ctx.fill();
+    ctx.lineWidth = 2;
+    ctx.strokeStyle = '#FFFFFF';
+    ctx.stroke();
+
+    // (+) Increase Button
+    var incX = previewX + 50 + 15;
+    createBtn('eras_plus', incX, eraserUiY, ctrlW, ctrlH, '', '➕');
+    if (updateBtn('eras_plus')) {
+        sndSelect();
+        if (typeof ERASER_RADIUS === 'undefined') window.ERASER_RADIUS = 30;
+        window.ERASER_RADIUS = Math.min(100, window.ERASER_RADIUS + 5);
+    }
+    drawBtn('eras_plus', { fontSize: 20 });
+
+    ctx.restore();
+
     // 3. Process up to 2 hands for drawing/erasing
     for (var h = 0; h < numHands; h++) {
         var lm = lmArr[h];
@@ -150,14 +207,18 @@ function renderDrawing(lmArr) {
         if (!lm) continue;
 
         var pointing = isPointing(lm);
-        var openHand = isOpenHand(lm);
+        var closedFist = isClosedFist(lm);
 
         // Don't draw if interacting with UI buttons at top
         var inUiZone = cur.sy < 150;
 
-        if (openHand && !pointing && !inUiZone) {
-            cur.isDraw = false;
-            eraseNearby(cur.sx, cur.sy);
+        if (closedFist && !pointing && !inUiZone) {
+            if (!cur.isDraw || !cur.drawCur || !cur.drawCur.isEraser) {
+                cur.isDraw = true;
+                cur.drawCur = { isEraser: true, color: '#000', points: [], eraserRadius: ERASER_RADIUS };
+                drawStrokes.push(cur.drawCur);
+            }
+            cur.drawCur.points.push({ x: cur.sx, y: cur.sy });
 
             // Eraser circle
             ctx.save();
@@ -185,9 +246,9 @@ function renderDrawing(lmArr) {
             ctx.restore();
 
             if (pointing && !inUiZone) {
-                if (!cur.isDraw) {
+                if (!cur.isDraw || (cur.drawCur && cur.drawCur.isEraser)) {
                     cur.isDraw = true;
-                    cur.drawCur = { color: drawColor, points: [] };
+                    cur.drawCur = { isEraser: false, color: drawColor, points: [] };
                     drawStrokes.push(cur.drawCur);
                 }
                 cur.drawCur.points.push({ x: cur.sx, y: cur.sy });

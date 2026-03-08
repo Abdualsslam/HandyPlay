@@ -16,3 +16,8 @@ function isPinchGesture(lm) {
     var dy = lm[4].y - lm[8].y;
     return Math.sqrt(dx * dx + dy * dy) < 0.055; // Slightly larger tolerance for thumb
 }
+
+function isClosedFist(lm) {
+    // A fist is basically when the tips of the 4 fingers are below their respective lower joints.
+    return lm[8].y > lm[6].y && lm[12].y > lm[10].y && lm[16].y > lm[14].y && lm[20].y > lm[18].y;
+}
