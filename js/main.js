@@ -16,9 +16,11 @@ function run(res) {
     ctx.drawImage(res.image, 0, 0, c.width, c.height);
     ctx.restore();
 
-    // Dark overlay
-    ctx.fillStyle = 'rgba(10, 6, 2, 0.85)';
-    ctx.fillRect(0, 0, c.width, c.height);
+    // Dark overlay (except in Baby Face mode where we want a clear view)
+    if (MODE !== 'BABY_FACE') {
+        ctx.fillStyle = 'rgba(10, 6, 2, 0.85)';
+        ctx.fillRect(0, 0, c.width, c.height);
+    }
 
     var lmArr = res.multiHandLandmarks || [];
     numHands = Math.min(2, lmArr.length);
@@ -61,8 +63,8 @@ function run(res) {
         cur.isPinching = isPinchGesture(lm);
         cur.pinchJustPressed = cur.isPinching && !cur.wasPinching;
 
-        // Visual Pinch Indicators (in Menu or Tic-Tac-Toe)
-        if (MODE === 'MENU' || MODE === 'TIC_TAC_TOE' || MODE === 'TARGET_SHOOTER' || MODE === 'PICTIONARY' || MODE === 'AIR_BAND' || MODE === 'PONG') {
+        // Visual Pinch Indicators (in Menu or Tic-Tac-Toe, or Baby Face for going back)
+        if (MODE === 'MENU' || MODE === 'TIC_TAC_TOE' || MODE === 'TARGET_SHOOTER' || MODE === 'PICTIONARY' || MODE === 'AIR_BAND' || MODE === 'PONG' || MODE === 'BABY_FACE') {
             ctx.save();
 
             // Connecting line
@@ -143,6 +145,9 @@ function run(res) {
             break;
         case 'PONG':
             renderPong();
+            break;
+        case 'BABY_FACE':
+            renderBabyFace();
             break;
     }
 

@@ -29,22 +29,23 @@ function renderMenu() {
 
     // ---- Layout Calculations ----
     var marginX = 40;
-    var marginTop = c.height * 0.12;
-    var sectionGap = 14;
-    var labelH = 22;
-    var instrH = 50;
+    var marginTop = c.height * 0.11;
+    var sectionGap = 10;
+    var labelH = 20;
+    var instrH = 40;
     var availW = c.width - marginX * 2;
-    var availH = c.height - marginTop - instrH - 20;
+    var availH = c.height - marginTop - instrH - 16;
 
-    // Row 1: 4 singleplayer cards, Row 2: 3 multiplayer cards
+    // Row 1: 4 singleplayer, Row 2: 4 multiplayer, Row 3: fun
     var row1Cols = 4;
     var row2Cols = 4;
-    var gap = 16;
+    var row3Cols = 1;
+    var gap = 14;
 
-    // Calculate card sizes to fill the available space
+    // Calculate card sizes to fill the available space (3 rows)
     var cardW = Math.min(220, (availW - gap * (row1Cols - 1)) / row1Cols);
-    var rowH = (availH - labelH * 2 - sectionGap * 2) / 2;
-    var cardH = Math.min(150, rowH - gap);
+    var rowH = (availH - labelH * 3 - sectionGap * 3) / 3;
+    var cardH = Math.min(130, rowH - gap);
 
     // ---- Singleplayer Section ----
     var row1W = cardW * row1Cols + gap * (row1Cols - 1);
@@ -106,16 +107,43 @@ function renderMenu() {
         drawGameCard(g.id, g.desc, g.icon, g.name, gx, row2Y, cardW, cardH);
     }
 
+    // ---- Fun Section ----
+    var row3LabelY = row2Y + cardH + sectionGap + 8;
+    var row3Y = row3LabelY + labelH + 6;
+
+    // Section label
+    ctx.save();
+    ctx.fillStyle = 'rgba(255,255,255,0.35)';
+    ctx.font = getFont('600', 14);
+    ctx.textAlign = 'center';
+    ctx.fillText(t('fun'), c.width / 2, row3LabelY);
+    ctx.restore();
+
+    var row3W = cardW * row3Cols + gap * (row3Cols - 1);
+    var row3X = (c.width - row3W) / 2;
+
+    var funGames = [
+        { id: 'menu_bf', name: t('baby_face'), icon: '\uD83D\uDC76', desc: t('desc_baby_face'), action: function () { sndSelect(); bfReset(); bfInitFaceMesh(); switchMode('BABY_FACE'); } }
+    ];
+
+    for (var i = 0; i < funGames.length; i++) {
+        var g = funGames[i];
+        var gx = row3X + i * (cardW + gap);
+        createBtn(g.id, gx, row3Y, cardW, cardH, g.name, g.icon);
+        if (updateBtn(g.id)) g.action();
+        drawGameCard(g.id, g.desc, g.icon, g.name, gx, row3Y, cardW, cardH);
+    }
+
     // ---- Usage Instructions ----
     ctx.save();
     ctx.textAlign = 'center';
-    ctx.font = getFont('400', 14);
+    ctx.font = getFont('400', 13);
     ctx.fillStyle = 'rgba(255,255,255,0.40)';
-    var instrY = row2Y + cardH + 24;
+    var instrY = row3Y + cardH + 18;
     ctx.fillText(t('instructions_cursor'), c.width / 2, instrY);
     ctx.fillStyle = 'rgba(255,255,255,0.25)';
-    ctx.font = getFont('400', 12);
-    ctx.fillText(t('instructions_detail'), c.width / 2, instrY + 22);
+    ctx.font = getFont('400', 11);
+    ctx.fillText(t('instructions_detail'), c.width / 2, instrY + 18);
     ctx.restore();
 }
 

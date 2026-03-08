@@ -9,6 +9,7 @@ var STRINGS = {
         choose_mode: 'اختر وضع اللعب',
         singleplayer: '— فردي —',
         multiplayer: '— جماعي —',
+        fun: '— مرح —',
         instructions_cursor: '☝️ حرّك المؤشر بالسبابة   🤏 اضغط بالإبهام والسبابة للنقر',
         instructions_detail: 'الرسم/الذكاء: أشِر للرسم · افتح اليد للمسح   |   التصويب: صوّب واضغط   |   الفرقة: مرّر واضغط',
         menu: 'القائمة',
@@ -22,6 +23,7 @@ var STRINGS = {
         pictionary: 'ارسم وخمّن',
         air_band: 'الفرقة الهوائية',
         pong: 'بونغ',
+        baby_face: 'وجه بيبي',
 
         // Game Descriptions
         desc_fruit_ninja: 'اقطع الفواكه بيدك وتجنب القنابل!',
@@ -32,6 +34,7 @@ var STRINGS = {
         desc_pictionary: 'ارسم الكلمة ودع الآخرين يخمّنونها',
         desc_air_band: 'اعزف على آلات موسيقية افتراضية بيديك',
         desc_pong: 'العب بونغ مع صديقك بتحريك المضرب بيدك',
+        desc_baby_face: 'حوّل وجهك إلى وجه بيبي لطيف!',
 
         // Top Bar Labels
         topbar_drawing: '✏️ وضع الرسم',
@@ -43,6 +46,7 @@ var STRINGS = {
         topbar_ai_draw: '🧠 تخمين الذكاء',
         topbar_air_band: '🎵 الفرقة الهوائية',
         topbar_pong: '🏓 بونغ',
+        topbar_baby_face: '👶 وجه بيبي',
 
         // Common Game Text
         game_over: 'انتهت اللعبة!',
@@ -119,6 +123,10 @@ var STRINGS = {
         pong_serve: 'جاهز!',
         pong_two_hands: '✋✋ أظهر يديك للبدء',
 
+        // Baby Face
+        bf_no_face: '😊 أظهر وجهك للكاميرا!',
+        bf_loading: '⏳ جاري تحميل فلتر الوجه...',
+
         // Language
         lang_toggle: '🌐 EN'
     },
@@ -127,6 +135,7 @@ var STRINGS = {
         choose_mode: 'Choose a Mode',
         singleplayer: '— SINGLEPLAYER —',
         multiplayer: '— MULTIPLAYER —',
+        fun: '— FUN —',
         instructions_cursor: '☝️ Move cursor with index finger   🤏 Pinch Thumb + Index to click',
         instructions_detail: 'Drawing/AI: Point to draw · Open hand to erase   |   Target Shooter: Aim & Pinch   |   Air Band: Hover pad & Pinch',
         menu: 'Menu',
@@ -140,6 +149,7 @@ var STRINGS = {
         pictionary: 'Pictionary',
         air_band: 'Air Band',
         pong: 'Pong',
+        baby_face: 'Baby Face',
 
         // Game Descriptions
         desc_fruit_ninja: 'Slash fruits with your hand, avoid bombs!',
@@ -150,6 +160,7 @@ var STRINGS = {
         desc_pictionary: 'Draw the word and let others guess it',
         desc_air_band: 'Play virtual instruments with your hands',
         desc_pong: 'Play Pong with a friend using hand gestures',
+        desc_baby_face: 'Transform your face into a cute baby face!',
 
         // Top Bar Labels
         topbar_drawing: '✏️ Drawing Mode',
@@ -161,6 +172,7 @@ var STRINGS = {
         topbar_ai_draw: '🧠 AI Draw & Guess',
         topbar_air_band: '🎵 Air Band',
         topbar_pong: '🏓 Pong',
+        topbar_baby_face: '👶 Baby Face',
 
         // Common Game Text
         game_over: 'Game Over!',
@@ -230,6 +242,10 @@ var STRINGS = {
         pong_score_separator: ' — ',
         pong_serve: 'Ready!',
         pong_two_hands: '✋✋ Show both hands to start',
+
+        // Baby Face
+        bf_no_face: '😊 Show your face to the camera!',
+        bf_loading: '⏳ Loading face filter...',
 
         // Language
         lang_toggle: '🌐 عربي'

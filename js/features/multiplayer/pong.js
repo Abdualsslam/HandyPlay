@@ -24,6 +24,7 @@ function pongServeBall(dir) {
     pongBallVX = PONG_BALL_SPEED * dir * Math.cos(angle);
     pongBallVY = PONG_BALL_SPEED * Math.sin(angle);
     pongServeDir = dir;
+    pongRallyStart = Date.now();
 }
 
 function pongSpawnParticles(x, y, color, count) {
@@ -213,7 +214,9 @@ function renderPong() {
                 var relHit = (pongBallY - pongPaddle1Y) / halfPaddle; // -1 to 1
                 var angle = relHit * (Math.PI / 4); // max 45 degrees
                 var speed = Math.sqrt(pongBallVX * pongBallVX + pongBallVY * pongBallVY);
-                speed = Math.min(speed * 1.05, PONG_BALL_SPEED * 2.5); // slight speed up, capped
+                var rallyAge = (now - pongRallyStart) / 1000;
+                var boost = rallyAge < 5 ? 1.15 : 1.05; // faster ramp-up in first 5s
+                speed = Math.min(speed * boost, PONG_BALL_SPEED * 2.5);
                 pongBallVX = speed * Math.cos(angle);
                 pongBallVY = speed * Math.sin(angle);
                 pongSpawnParticles(pongBallX, pongBallY, PONG_COLOR_LEFT, 10);
@@ -231,7 +234,9 @@ function renderPong() {
                 var relHit = (pongBallY - pongPaddle2Y) / halfPaddle;
                 var angle = relHit * (Math.PI / 4);
                 var speed = Math.sqrt(pongBallVX * pongBallVX + pongBallVY * pongBallVY);
-                speed = Math.min(speed * 1.05, PONG_BALL_SPEED * 2.5);
+                var rallyAge = (now - pongRallyStart) / 1000;
+                var boost = rallyAge < 5 ? 1.15 : 1.05;
+                speed = Math.min(speed * boost, PONG_BALL_SPEED * 2.5);
                 pongBallVX = -speed * Math.cos(angle);
                 pongBallVY = speed * Math.sin(angle);
                 pongSpawnParticles(pongBallX, pongBallY, PONG_COLOR_RIGHT, 10);

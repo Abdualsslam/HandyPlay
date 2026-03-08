@@ -115,3 +115,10 @@ var pongParticles = [];
 var pongBallTrail = [];
 var pongLastTime = 0;
 var pongServeDir = 1;
+var pongRallyStart = 0;
+
+// Baby Face state
+var bfFaceMesh = null;
+var bfFaceLandmarks = null;
+var bfInitialized = false;
+var bfLoading = false;
