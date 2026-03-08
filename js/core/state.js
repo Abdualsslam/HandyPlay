@@ -101,3 +101,17 @@ var abInstrument = 'drums';
 var abPadHits = [];
 var abRipples = [];
 var abPhase = 'PLAYING';
+
+// Pong state
+var pongBallX = 0, pongBallY = 0;
+var pongBallVX = 0, pongBallVY = 0;
+var pongPaddle1Y = 0, pongPaddle2Y = 0;
+var pongScore1 = 0, pongScore2 = 0;
+var pongGameOver = false;
+var pongWinner = 0;
+var pongStarted = false;
+var pongCountdownStart = 0;
+var pongParticles = [];
+var pongBallTrail = [];
+var pongLastTime = 0;
+var pongServeDir = 1;

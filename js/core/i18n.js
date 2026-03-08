@@ -21,6 +21,7 @@ var STRINGS = {
         tic_tac_toe: 'إكس أو',
         pictionary: 'ارسم وخمّن',
         air_band: 'الفرقة الهوائية',
+        pong: 'بونغ',
 
         // Game Descriptions
         desc_fruit_ninja: 'اقطع الفواكه بيدك وتجنب القنابل!',
@@ -30,6 +31,7 @@ var STRINGS = {
         desc_tic_tac_toe: 'العب إكس أو مع صديقك بالإيماءات',
         desc_pictionary: 'ارسم الكلمة ودع الآخرين يخمّنونها',
         desc_air_band: 'اعزف على آلات موسيقية افتراضية بيديك',
+        desc_pong: 'العب بونغ مع صديقك بتحريك المضرب بيدك',
 
         // Top Bar Labels
         topbar_drawing: '✏️ وضع الرسم',
@@ -40,6 +42,7 @@ var STRINGS = {
         topbar_pictionary: '🎨 ارسم وخمّن',
         topbar_ai_draw: '🧠 تخمين الذكاء',
         topbar_air_band: '🎵 الفرقة الهوائية',
+        topbar_pong: '🏓 بونغ',
 
         // Common Game Text
         game_over: 'انتهت اللعبة!',
@@ -109,6 +112,13 @@ var STRINGS = {
         // Air Band
         // Instrument names stay universal
 
+        // Pong
+        pong_player: 'اللاعب ',
+        pong_wins: ' فاز! 🎉',
+        pong_score_separator: ' — ',
+        pong_serve: 'جاهز!',
+        pong_two_hands: '✋✋ أظهر يديك للبدء',
+
         // Language
         lang_toggle: '🌐 EN'
     },
@@ -129,6 +139,7 @@ var STRINGS = {
         tic_tac_toe: 'Tic-Tac-Toe',
         pictionary: 'Pictionary',
         air_band: 'Air Band',
+        pong: 'Pong',
 
         // Game Descriptions
         desc_fruit_ninja: 'Slash fruits with your hand, avoid bombs!',
@@ -138,6 +149,7 @@ var STRINGS = {
         desc_tic_tac_toe: 'Play X & O with a friend using gestures',
         desc_pictionary: 'Draw the word and let others guess it',
         desc_air_band: 'Play virtual instruments with your hands',
+        desc_pong: 'Play Pong with a friend using hand gestures',
 
         // Top Bar Labels
         topbar_drawing: '✏️ Drawing Mode',
@@ -148,6 +160,7 @@ var STRINGS = {
         topbar_pictionary: '🎨 Pictionary',
         topbar_ai_draw: '🧠 AI Draw & Guess',
         topbar_air_band: '🎵 Air Band',
+        topbar_pong: '🏓 Pong',
 
         // Common Game Text
         game_over: 'Game Over!',
@@ -210,6 +223,13 @@ var STRINGS = {
         times_up: "⏰ Time's Up!",
         word_was: 'The word was: ',
         new_round: 'New Round',
+
+        // Pong
+        pong_player: 'Player ',
+        pong_wins: ' Wins! 🎉',
+        pong_score_separator: ' — ',
+        pong_serve: 'Ready!',
+        pong_two_hands: '✋✋ Show both hands to start',
 
         // Language
         lang_toggle: '🌐 عربي'

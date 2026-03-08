@@ -38,7 +38,7 @@ function renderMenu() {
 
     // Row 1: 4 singleplayer cards, Row 2: 3 multiplayer cards
     var row1Cols = 4;
-    var row2Cols = 3;
+    var row2Cols = 4;
     var gap = 16;
 
     // Calculate card sizes to fill the available space
@@ -94,7 +94,8 @@ function renderMenu() {
     var mpGames = [
         { id: 'menu_ttt', name: t('tic_tac_toe'), icon: '⚔️', desc: t('desc_tic_tac_toe'), action: function () { sndSelect(); tttReset(); switchMode('TIC_TAC_TOE'); } },
         { id: 'menu_pic', name: t('pictionary'), icon: '🎨', desc: t('desc_pictionary'), action: function () { sndSelect(); picReset(); switchMode('PICTIONARY'); } },
-        { id: 'menu_ab', name: t('air_band'), icon: '🎵', desc: t('desc_air_band'), action: function () { sndSelect(); abReset(); switchMode('AIR_BAND'); } }
+        { id: 'menu_ab', name: t('air_band'), icon: '🎵', desc: t('desc_air_band'), action: function () { sndSelect(); abReset(); switchMode('AIR_BAND'); } },
+        { id: 'menu_pong', name: t('pong'), icon: '🏓', desc: t('desc_pong'), action: function () { sndSelect(); pongReset(); switchMode('PONG'); } }
     ];
 
     for (var i = 0; i < mpGames.length; i++) {
@@ -221,7 +222,8 @@ function renderTopBar() {
         'TARGET_SHOOTER': t('topbar_target_shooter'),
         'PICTIONARY': t('topbar_pictionary'),
         'AI_DRAW': t('topbar_ai_draw'),
-        'AIR_BAND': t('topbar_air_band')
+        'AIR_BAND': t('topbar_air_band'),
+        'PONG': t('topbar_pong')
     };
     ctx.fillText(labels[MODE] || MODE, c.width / 2, barH / 2);
     ctx.restore();

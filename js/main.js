@@ -62,7 +62,7 @@ function run(res) {
         cur.pinchJustPressed = cur.isPinching && !cur.wasPinching;
 
         // Visual Pinch Indicators (in Menu or Tic-Tac-Toe)
-        if (MODE === 'MENU' || MODE === 'TIC_TAC_TOE' || MODE === 'TARGET_SHOOTER' || MODE === 'PICTIONARY' || MODE === 'AIR_BAND') {
+        if (MODE === 'MENU' || MODE === 'TIC_TAC_TOE' || MODE === 'TARGET_SHOOTER' || MODE === 'PICTIONARY' || MODE === 'AIR_BAND' || MODE === 'PONG') {
             ctx.save();
 
             // Connecting line
@@ -140,6 +140,9 @@ function run(res) {
             break;
         case 'AIR_BAND':
             renderAirBand();
+            break;
+        case 'PONG':
+            renderPong();
             break;
     }
 
